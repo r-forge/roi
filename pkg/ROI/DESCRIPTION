@@ -10,8 +10,8 @@ Description: The R Optimization Infrastructure ('ROI') <doi:10.18637/jss.v094.i1
 	is a sophisticated framework for handling optimization problems in R.
 	Additional information can be found on the 'ROI' homepage <http://roi.r-forge.r-project.org/>.
 Depends: R (>= 2.10)
-Imports: methods, registry (>= 0.5), slam, utils
+Imports: methods, registry (>= 0.5), slam, utils, checkmate
 Suggests: numDeriv
 License: GPL-3
 URL: http://roi.r-forge.r-project.org/, https://r-forge.r-project.org/projects/roi/
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

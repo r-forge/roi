@@ -9,6 +9,7 @@
 #' @importFrom stats variable.names setNames na.omit terms aggregate
 #' @importFrom utils str tail download.file
 #' @import slam
+#' @import checkmate
 #
 
 ################################################################################
