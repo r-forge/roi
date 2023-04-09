@@ -1,17 +1,15 @@
-
-setwd("/home/f/work/Optimization/ROI/ROI_R-Forge/www/db")
-
+# setwd("/home/f/work/Optimization/ROI/ROI_R-Forge/www/db")
 source("create_solver_db_functions.R")
 
 
 r_version <- "R"
 lib.loc <- head(.libPaths(), 1)
-repos <- c("dirkschumacher/ROI.plugin.cbc", "datastorm-open/ROI.plugin.clp",
-           "FlorianSchwendinger/ROI.plugin.gurobi", "FlorianSchwendinger/ROI.plugin.mosek")
+repos <- c("dirkschumacher/ROI.plugin.cbc", "datastorm-open/ROI.plugin.clp")
 CRAN <- "https://cran.r-project.org/"
 
-## r_version, lib.loc, repos 
-solver_db_github <- create_solver_db_github(r_version, lib.loc, repos, CRAN)
+## r_version, lib.loc, repos
+reinstall <- FALSE
+solver_db_github <- create_solver_db_github(r_version, lib.loc, repos, CRAN, reinstall = reinstall)
 
 b <- sapply(solver_db_github$Signature, nrow) == 0L
 solver_db_github$Package[b]

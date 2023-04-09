@@ -4,6 +4,7 @@
 
 as.df <- function(x) as.data.frame(x, stringsAsFactors = FALSE)
 
+
 install_dependencies <- function() {
     lib.loc <- head(.libPaths(), 1)
     pkgs <- c("remotes", "lattice", "Matrix", "slam", "ROI", "Rsymphony", "Rglpk", "DEoptim", "DEoptimR")
@@ -14,23 +15,35 @@ install_dependencies <- function() {
     }
 }
 
+
+install_command <- function(repo, lib.loc, r_version, fun_name = "remotes:::install_github") {
+    cmd <- c(
+        sprintf("export R_LIB=%s", shQuote(lib.loc)),
+        sprintf('%s --slave -e "%s(%s)"',
+                r_version, fun_name, shQuote(repo))
+    )
+    paste(cmd, collapse = "; ")
+}
+
+
 install_package <- function(pkg, repos, lib.loc, r_version, type = "source") {
     cmd <- sprintf('%s --slave -e "install.packages(%s, lib = %s, repos = %s, type = %s)"', 
-                  r_version, shQuote(pkg), shQuote(lib.loc), shQuote(repos), shQuote(type))
+                   r_version, shQuote(pkg), shQuote(lib.loc), shQuote(repos), shQuote(type))
     out <- system(cmd, intern = TRUE, ignore.stderr = TRUE)
     status_error <- length(grep("error", out, ignore.case = TRUE))
     status_dir <- !length(dir(lib.loc, pattern = pkg))
     status_error + status_dir
 }
 
+
 install_package_rforge <- function(pkg, url, repos, lib.loc, r_version, type = "source") {
     status <- install_package(pkg, repos, lib.loc, r_version, type)
     if (!status) {
-        cmd <- sprintf('%s --slave -e "remotes:::install_svn(%s, lib = %s)"', 
+        cmd <- sprintf('%s --slave -e "remotes:::install_svn(%s, lib = %s)"',
                        r_version, shQuote(url), shQuote(lib.loc))
         out <- system(cmd, intern = TRUE, ignore.stderr = TRUE)
         status_error <- length(grep("error", out, ignore.case = TRUE))
-        status_dir <- !length(dir(lib.loc, pattern = pkg))        
+        status_dir <- !length(dir(lib.loc, pattern = pkg))
         status_error + status_dir
     }
     status
@@ -42,13 +55,25 @@ install_package_github <- function(repo, lib.loc, r_version) {
     ## for now assume that the repo name and the package name are
     ## the same
     pkg <- gsub(".*/", "", repo)
-    cmd <- sprintf('%s --slave -e "remotes:::install_github(%s, lib = %s)"', 
-                   r_version, shQuote(repo), shQuote(lib.loc))
+    cmd <- install_command(repo, lib.loc, r_version, "remotes:::install_github")
     out <- system(cmd, intern = TRUE, ignore.stderr = TRUE)
     status_error <- length(grep("error", out, ignore.case = TRUE))
     status_dir <- !length(dir(lib.loc, pattern = pkg))
     status_error + status_dir
 }
+
+
+install_package_gitlab <- function(repo, lib.loc, r_version) {
+    ## for now assume that the repo name and the package name are
+    ## the same
+    pkg <- gsub(".*/", "", repo)
+    cmd <- install_command(repo, lib.loc, r_version, "remotes:::install_gitlab")
+    out <- system(cmd, intern = TRUE, ignore.stderr = TRUE)
+    status_error <- length(grep("error", out, ignore.case = TRUE))
+    status_dir <- !length(dir(lib.loc, pattern = pkg))
+    status_error + status_dir
+}
+
 
 get_signature_entries <- function() {
     x <- ROI_plugin_make_signature( objective = "L",
@@ -107,13 +132,13 @@ get_roi_solver_rforge <- function() {
 }
 
 create_solver_db_cran <- function(r_version, lib.loc, repos = "https://cran.r-project.org") {
-    
-    ## .libPaths(c(lib.loc, .libPaths()))  
+    ## .libPaths(c(lib.loc, .libPaths()))
     install_dependencies()
     Sys.setenv(ROI_LOAD_PLUGINS = FALSE)
     library(ROI)
-    
+
     ## CRAN
+
     roi_solver_cran <- as.df(get_roi_solver_cran(repos))
     roi_solver_cran$Signature <- list(NA)
     for (i in seq_len(nrow(roi_solver_cran))) {
@@ -161,22 +186,28 @@ create_solver_db_rforge <- function(r_version, lib.loc, repos = "http://R-Forge.
     roi_solver_rforge
 }
 
-create_solver_db_github <- function(r_version, lib.loc, repos, cran) {
-    
+
+create_solver_db_github <- function(r_version, lib.loc, repos, cran, reinstall = TRUE) {
     install_dependencies()
     Sys.setenv(ROI_LOAD_PLUGINS = FALSE)
     library(ROI)
     library(RCurl)
 
     cnames <- c(colnames(available.packages(repos=cran)), "Signature")
-  
+
     ## GITHUB
     roi_solver_github <- vector("list", length(repos))
-    
+    installed_packages <- unname(installed.packages()[, 1L])
+
     for (i in seq_along(repos)) {
         repo <- repos[i]
         pkg <- gsub(".*/", "", repo)
-        status <- install_package_github(repo, lib.loc, r_version)
+        if (reinstall || (!pkg %in% installed_packages)) {
+            status <- install_package_github(repo, lib.loc, r_version)
+        } else {
+            status <- 0L  # 0 for success
+        }
+
         if (!status) {
             roi_solver_github[[i]] <- parse_description(pkg, lib.loc, cnames)
             suppressMessages( do.call(require, list(pkg)) )
@@ -191,5 +222,56 @@ create_solver_db_github <- function(r_version, lib.loc, repos, cran) {
     roi_solver_github <- do.call(rbind, roi_solver_github)
     ##roi_solver_github$Repository <- "https://github.com"
     roi_solver_github
+}
+
+
+create_solver_db_gitlab <- function(r_version, lib.loc, repos, cran, reinstall = TRUE) {
+    install_dependencies()
+    Sys.setenv(ROI_LOAD_PLUGINS = FALSE)
+    library(ROI)
+    library(RCurl)
+
+    cnames <- c(colnames(available.packages(repos=cran)), "Signature")
+
+    ## GITLAB
+    roi_solver_gitlab <- vector("list", length(repos))
+    installed_packages <- unname(installed.packages()[, 1L])
+
+    for (i in seq_along(repos)) {
+        repo <- repos[i]
+        pkg <- gsub(".*/", "", repo)
+        if (reinstall || (!pkg %in% installed_packages)) {
+            status <- install_package_gitlab(repo, lib.loc, r_version)
+        } else {
+            status <- 0L  # 0 for success
+        }
+
+        if (!status) {
+            roi_solver_gitlab[[i]] <- parse_description(pkg, lib.loc, cnames)
+            suppressMessages( do.call(require, list(pkg)) )
+            plugin <- gsub("^ROI\\.plugin\\.", "", pkg)
+            roi_solver_gitlab[[i]]$Signature <- list(extract_signature(plugin))
+            git_repo <- file.path("https://gitlab.com", repo)
+            roi_solver_gitlab[[i]]$Repository <- sub("/ROI.plugin.*", "", git_repo)
+        } else {
+            cat("NOTE: package '", pkg, "' could not be installed from '", repo, "'!\n", sep = "")
+        }
+    }
+    roi_solver_gitlab <- do.call(rbind, roi_solver_gitlab)
+    ##roi_solver_gitlab$Repository <- "https://gitlab.com"
+    roi_solver_gitlab
+}
+
+
+gitlab_read <- function(file, repo, branch = "main", prefix = "https://gitlab.com") {
+    git_url <- sprintf("%s/%s/-/raw/%s/%s", prefix, repo, branch, file)
+    con <- url(git_url)
+    con
+}
+
+
+gitlab_read_dcf <- function(con) {
+    dcf <- read.dcf(con)
+    dcf
 }
 
