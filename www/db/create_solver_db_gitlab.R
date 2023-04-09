@@ -1,4 +1,4 @@
-    library("curl")
+library("curl")
 library("jsonlite")
 library("gitlabr")
 source("create_solver_db_functions.R")
@@ -25,6 +25,8 @@ CRAN <- "https://cran.r-project.org/"
 
 ## r_version, lib.loc, repos
 solver_db_gitlab <- create_solver_db_gitlab(r_version, lib.loc, repos, CRAN, reinstall = FALSE)
+dim(solver_db_gitlab)
+solver_db_gitlab$Repository
 
 b <- sapply(solver_db_gitlab$Signature, nrow) == 0L
 solver_db_gitlab$Package[b]

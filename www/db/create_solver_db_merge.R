@@ -8,6 +8,8 @@ solver_db_gitlab <- readRDS(file = "SOLVERS_GITLAB.rds")
 stopifnot( all(colnames(solver_db_cran) == colnames(solver_db_gitlab)) )
 stopifnot( all(colnames(solver_db_cran) == colnames(solver_db_github)) )
 
+solver_db_gitlab$Package
+solver_db_gitlab$Repo
 solver_db <- rbind(solver_db_cran, solver_db_gitlab, solver_db_github)
 rownames(solver_db) <- NULL
 colnames(solver_db)
