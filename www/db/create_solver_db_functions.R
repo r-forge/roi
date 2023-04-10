@@ -228,8 +228,8 @@ create_solver_db_github <- function(r_version, lib.loc, repos, cran, reinstall =
 create_solver_db_gitlab <- function(r_version, lib.loc, repos, cran, reinstall = TRUE) {
     install_dependencies()
     Sys.setenv(ROI_LOAD_PLUGINS = FALSE)
-    library(ROI)
-    library(RCurl)
+    library("ROI")
+    library("RCurl")
 
     cnames <- c(colnames(available.packages(repos=cran)), "Signature")
 
