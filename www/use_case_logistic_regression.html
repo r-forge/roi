@@ -13,40 +13,69 @@
 
 <title>Logistic regression</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -55,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -97,13 +126,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -111,39 +147,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
@@ -154,10 +160,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -174,40 +176,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 64px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
-.section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -235,7 +213,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -247,7 +225,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -257,11 +235,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -273,13 +268,12 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -287,16 +281,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -399,7 +386,7 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -413,7 +400,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -451,7 +438,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -463,11 +450,11 @@ div.tocify {
 <p>The <a href="https://en.wikipedia.org/wiki/Logistic_regression">logistic model</a> (or logit model) belongs to the <a href="https://en.wikipedia.org/wiki/Generalized_linear_model">generalized linear models</a> family (GLM). It is widely used in regression analysis to model a binary dependent variable.</p>
 <p>Since GLMs are commonly used <strong>R</strong> has already built-in functionality to estimate GLMs. Specifically the <code>glm</code> function from the <strong>stats</strong> package, with a binomial family and logit link can be used to estimate a logistic model.</p>
 <p>The following logistic regression example is from <a href="#HSAUR">Brian S. Everitt and Torsten Hothorn (2017)</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">options</span>(<span class="dt">width =</span> <span class="dv">10000</span>)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(HSAUR)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">options</span>(<span class="dt">width =</span> <span class="dv">10000</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">library</span>(HSAUR)</span></code></pre></div>
 <pre><code>## Loading required package: tools</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">m &lt;-<span class="st"> </span><span class="kw">glm</span>(ESR <span class="op">~</span><span class="st"> </span>fibrinogen, <span class="dt">data =</span> plasma, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;logit&quot;</span>))</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="kw">coef</span>(m)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>m &lt;-<span class="st"> </span><span class="kw">glm</span>(ESR <span class="op">~</span><span class="st"> </span>fibrinogen, <span class="dt">data =</span> plasma, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">coef</span>(m)</span></code></pre></div>
 <pre><code>## (Intercept)  fibrinogen 
 ##   -6.845075    1.827081</code></pre>
 <p>Making use of maximum likelihood estimation the logistic regression model can also be estimated in <strong>ROI</strong>. Here either a conic solver or a general purpose solver can be used. The conic solvers have the advantages that they are designed to find the global optimum and are (typically) faster.</p>
@@ -484,54 +471,54 @@ div.tocify {
 </div>
 <div id="estimation" class="section level1">
 <h1>Estimation</h1>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">Sys.setenv</span>(<span class="dt">ROI_LOAD_PLUGINS =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="kw">library</span>(ROI)</a>
-<a class="sourceLine" id="cb5-3" title="3"><span class="kw">library</span>(ROI.plugin.optimx)</a>
-<a class="sourceLine" id="cb5-4" title="4"><span class="kw">library</span>(ROI.plugin.ecos)</a>
-<a class="sourceLine" id="cb5-5" title="5">X &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="dt">Intercept =</span> <span class="dv">1</span>, <span class="dt">fibrinogen =</span> plasma<span class="op">$</span>fibrinogen)</a>
-<a class="sourceLine" id="cb5-6" title="6">y &lt;-<span class="st"> </span><span class="kw">as.integer</span>(plasma<span class="op">$</span>ESR) <span class="op">-</span><span class="st"> </span>1L</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">Sys.setenv</span>(<span class="dt">ROI_LOAD_PLUGINS =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">library</span>(ROI)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="kw">library</span>(ROI.plugin.optimx)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="kw">library</span>(ROI.plugin.ecos)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>X &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="dt">Intercept =</span> <span class="dv">1</span>, <span class="dt">fibrinogen =</span> plasma<span class="op">$</span>fibrinogen)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>y &lt;-<span class="st"> </span><span class="kw">as.integer</span>(plasma<span class="op">$</span>ESR) <span class="op">-</span><span class="st"> </span>1L</span></code></pre></div>
 </div>
 <div id="general-purpose-solver" class="section level1">
 <h1>General purpose solver</h1>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">mle &lt;-<span class="st"> </span><span class="cf">function</span>(beta) {</a>
-<a class="sourceLine" id="cb6-2" title="2">    <span class="kw">drop</span>(y <span class="op">%*%</span><span class="st"> </span>X <span class="op">%*%</span><span class="st"> </span>beta <span class="op">-</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">log</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(X <span class="op">%*%</span><span class="st"> </span>beta))))</a>
-<a class="sourceLine" id="cb6-3" title="3">}</a>
-<a class="sourceLine" id="cb6-4" title="4"></a>
-<a class="sourceLine" id="cb6-5" title="5">op_gps &lt;-<span class="st"> </span><span class="kw">OP</span>(<span class="kw">F_objective</span>(mle, <span class="dt">n =</span>  <span class="kw">ncol</span>(X)), <span class="dt">maximum =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb6-6" title="6">    <span class="dt">bounds =</span> <span class="kw">V_bound</span>(<span class="dt">ld =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">nobj =</span> <span class="kw">ncol</span>(X)))</a>
-<a class="sourceLine" id="cb6-7" title="7">s1 &lt;-<span class="st"> </span><span class="kw">ROI_solve</span>(op_gps, <span class="st">&quot;optimx&quot;</span>, <span class="dt">start =</span> <span class="kw">double</span>(<span class="kw">ncol</span>(X)))</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>mle &lt;-<span class="st"> </span><span class="cf">function</span>(beta) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>    <span class="kw">drop</span>(y <span class="op">%*%</span><span class="st"> </span>X <span class="op">%*%</span><span class="st"> </span>beta <span class="op">-</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">log</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(X <span class="op">%*%</span><span class="st"> </span>beta))))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>}</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>op_gps &lt;-<span class="st"> </span><span class="kw">OP</span>(<span class="kw">F_objective</span>(mle, <span class="dt">n =</span>  <span class="kw">ncol</span>(X)), <span class="dt">maximum =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a>    <span class="dt">bounds =</span> <span class="kw">V_bound</span>(<span class="dt">ld =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">nobj =</span> <span class="kw">ncol</span>(X)))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>s1 &lt;-<span class="st"> </span><span class="kw">ROI_solve</span>(op_gps, <span class="st">&quot;optimx&quot;</span>, <span class="dt">start =</span> <span class="kw">double</span>(<span class="kw">ncol</span>(X)))</span></code></pre></div>
 <pre><code>## Maximizing -- use negfn and neggr</code></pre>
 <pre><code>## Warning in max(logpar): no non-missing arguments to max; returning -Inf</code></pre>
 <pre><code>## Warning in min(logpar): no non-missing arguments to min; returning Inf</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">solution</span>(s1)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="kw">solution</span>(s1)</span></code></pre></div>
 <pre><code>## [1] -6.845075  1.827081</code></pre>
 </div>
 <div id="conic-solver" class="section level1">
 <h1>Conic solver</h1>
 <p>For conic optimization we need to build the matrices necessary to express the objective function.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">library</span>(slam)</a>
-<a class="sourceLine" id="cb12-2" title="2">logistic_regression &lt;-<span class="st"> </span><span class="cf">function</span>(y, X, <span class="dt">solver =</span> <span class="st">&quot;ecos&quot;</span>, ...) {</a>
-<a class="sourceLine" id="cb12-3" title="3">  stm &lt;-<span class="st"> </span>simple_triplet_matrix</a>
-<a class="sourceLine" id="cb12-4" title="4">  stzm &lt;-<span class="st"> </span>simple_triplet_zero_matrix</a>
-<a class="sourceLine" id="cb12-5" title="5">  <span class="kw">stopifnot</span>(<span class="kw">is.vector</span>(y), <span class="kw">length</span>(y) <span class="op">==</span><span class="st"> </span><span class="kw">nrow</span>(X))</a>
-<a class="sourceLine" id="cb12-6" title="6">  m &lt;-<span class="st"> </span><span class="kw">nrow</span>(X); n &lt;-<span class="st"> </span><span class="kw">ncol</span>(X)</a>
-<a class="sourceLine" id="cb12-7" title="7">  i &lt;-<span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="kw">seq_len</span>(m) <span class="op">-</span><span class="st"> </span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb12-8" title="8">  op &lt;-<span class="st"> </span><span class="kw">OP</span>(<span class="kw">c</span>(<span class="op">-</span>(y <span class="op">%*%</span><span class="st"> </span>X), <span class="kw">rep.int</span>(<span class="dv">1</span>, m), <span class="kw">double</span>(m)), <span class="dt">maximum =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb12-9" title="9">  C11 &lt;-<span class="st"> </span><span class="kw">stm</span>(<span class="kw">rep</span>(i, n), <span class="kw">rep</span>(<span class="kw">seq_len</span>(n), <span class="dt">each =</span> m), <span class="op">-</span><span class="kw">drop</span>(X), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>m, n)</a>
-<a class="sourceLine" id="cb12-10" title="10">  C12 &lt;-<span class="st"> </span><span class="kw">stm</span>(i, <span class="kw">seq_len</span>(m), <span class="kw">rep.int</span>(<span class="dv">1</span>, m), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>m, m)</a>
-<a class="sourceLine" id="cb12-11" title="11">  C13 &lt;-<span class="st"> </span><span class="kw">stm</span>(i <span class="op">+</span><span class="st"> </span><span class="dv">2</span>, <span class="kw">seq_len</span>(m), <span class="kw">rep.int</span>(<span class="op">-</span><span class="dv">1</span>, m), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>m, m)</a>
-<a class="sourceLine" id="cb12-12" title="12">  C1 &lt;-<span class="st"> </span><span class="kw">cbind</span>(C11, C12, C13)</a>
-<a class="sourceLine" id="cb12-13" title="13">  C2 &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">stzm</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span>m, n), C12, <span class="op">-</span>C13)</a>
-<a class="sourceLine" id="cb12-14" title="14">  C &lt;-<span class="st"> </span><span class="kw">rbind</span>(C1, C2)</a>
-<a class="sourceLine" id="cb12-15" title="15">  cones &lt;-<span class="st"> </span><span class="kw">K_expp</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>m)</a>
-<a class="sourceLine" id="cb12-16" title="16">  rhs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>), m), <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), m))</a>
-<a class="sourceLine" id="cb12-17" title="17">  <span class="kw">constraints</span>(op) &lt;-<span class="st"> </span><span class="kw">C_constraint</span>(C, cones, rhs)</a>
-<a class="sourceLine" id="cb12-18" title="18">  <span class="kw">bounds</span>(op) &lt;-<span class="st"> </span><span class="kw">V_bound</span>(<span class="dt">ld =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">nobj =</span> <span class="kw">ncol</span>(C))</a>
-<a class="sourceLine" id="cb12-19" title="19">  <span class="kw">ROI_solve</span>(op, <span class="dt">solver =</span> solver, ...)</a>
-<a class="sourceLine" id="cb12-20" title="20">}</a>
-<a class="sourceLine" id="cb12-21" title="21"></a>
-<a class="sourceLine" id="cb12-22" title="22">s2 &lt;-<span class="st"> </span><span class="kw">logistic_regression</span>(y, X)</a>
-<a class="sourceLine" id="cb12-23" title="23"><span class="kw">head</span>(<span class="kw">solution</span>(s2), <span class="kw">ncol</span>(X))</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="kw">library</span>(slam)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>logistic_regression &lt;-<span class="st"> </span><span class="cf">function</span>(y, X, <span class="dt">solver =</span> <span class="st">&quot;ecos&quot;</span>, ...) {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>  stm &lt;-<span class="st"> </span>simple_triplet_matrix</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a>  stzm &lt;-<span class="st"> </span>simple_triplet_zero_matrix</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.vector</span>(y), <span class="kw">length</span>(y) <span class="op">==</span><span class="st"> </span><span class="kw">nrow</span>(X))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>  m &lt;-<span class="st"> </span><span class="kw">nrow</span>(X); n &lt;-<span class="st"> </span><span class="kw">ncol</span>(X)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a>  i &lt;-<span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="kw">seq_len</span>(m) <span class="op">-</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>  op &lt;-<span class="st"> </span><span class="kw">OP</span>(<span class="kw">c</span>(<span class="op">-</span>(y <span class="op">%*%</span><span class="st"> </span>X), <span class="kw">rep.int</span>(<span class="dv">1</span>, m), <span class="kw">double</span>(m)), <span class="dt">maximum =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a>  C11 &lt;-<span class="st"> </span><span class="kw">stm</span>(<span class="kw">rep</span>(i, n), <span class="kw">rep</span>(<span class="kw">seq_len</span>(n), <span class="dt">each =</span> m), <span class="op">-</span><span class="kw">drop</span>(X), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>m, n)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true"></a>  C12 &lt;-<span class="st"> </span><span class="kw">stm</span>(i, <span class="kw">seq_len</span>(m), <span class="kw">rep.int</span>(<span class="dv">1</span>, m), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>m, m)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true"></a>  C13 &lt;-<span class="st"> </span><span class="kw">stm</span>(i <span class="op">+</span><span class="st"> </span><span class="dv">2</span>, <span class="kw">seq_len</span>(m), <span class="kw">rep.int</span>(<span class="op">-</span><span class="dv">1</span>, m), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>m, m)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true"></a>  C1 &lt;-<span class="st"> </span><span class="kw">cbind</span>(C11, C12, C13)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true"></a>  C2 &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">stzm</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span>m, n), C12, <span class="op">-</span>C13)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true"></a>  C &lt;-<span class="st"> </span><span class="kw">rbind</span>(C1, C2)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true"></a>  cones &lt;-<span class="st"> </span><span class="kw">K_expp</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>m)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true"></a>  rhs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>), m), <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), m))</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true"></a>  <span class="kw">constraints</span>(op) &lt;-<span class="st"> </span><span class="kw">C_constraint</span>(C, cones, rhs)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true"></a>  <span class="kw">bounds</span>(op) &lt;-<span class="st"> </span><span class="kw">V_bound</span>(<span class="dt">ld =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">nobj =</span> <span class="kw">ncol</span>(C))</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true"></a>  <span class="kw">ROI_solve</span>(op, <span class="dt">solver =</span> solver, ...)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true"></a>}</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true"></a>s2 &lt;-<span class="st"> </span><span class="kw">logistic_regression</span>(y, X)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">solution</span>(s2), <span class="kw">ncol</span>(X))</span></code></pre></div>
 <pre><code>## [1] -6.845075  1.827081</code></pre>
 </div>
 <div id="references" class="section level1">
@@ -552,7 +539,7 @@ div.tocify {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -570,7 +557,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
@@ -579,6 +566,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
@@ -591,7 +581,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0

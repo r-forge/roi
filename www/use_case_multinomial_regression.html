@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>use_case_multinomial_regression.knit</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R Optimization Infrastructure</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">ROI</a>
+</li>
+<li>
+  <a href="installation.html">Installation</a>
+</li>
+<li>
+  <a href="introduction.html">Introduction</a>
+</li>
+<li>
+  <a href="use_cases.html">Use Cases</a>
+</li>
+<li>
+  <a href="mixed.html">Mixed topics</a>
+</li>
+<li>
+  <a href="faq.html">FAQ</a>
+</li>
+<li>
+  <a href="news.html">What's new?</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div id="model" class="section level1">
+<h1>Model</h1>
+<p>The <a href="https://en.wikipedia.org/wiki/Multinomial_logistic_regression">multinomial logistic model</a> (or multinomial logit model) is widely used in regression analysis to model unordered categorical variables.</p>
+<div id="likelihood" class="section level2">
+<h2>Likelihood</h2>
+<p>Assume we have a categorical dependent variable <span class="math inline">\(y_{i} \in {1, \ldots, J}\)</span> which can take a value out of <span class="math inline">\(J\)</span> unordered categories for each observation <span class="math inline">\(i = 1,\ldots, n\)</span>. Moreover, for each observation we observe a vector of <span class="math inline">\(p\)</span> covariates <span class="math inline">\(\boldsymbol x_i\)</span> which do not depend on the category (this assumption can easily be relaxed). Let us create a binary vector <span class="math inline">\(\boldsymbol {\tilde y}_i\)</span> where <span class="math inline">\(\tilde y_{ij}=1\)</span> if <span class="math inline">\(y_i=j\)</span>. The likelihood is given by: <span class="math display">\[
+\ell(\boldsymbol\beta_1, \ldots, \boldsymbol\beta_J) = \prod_{i=1}^n\prod_{j=1}^J\left[\frac{\exp(\boldsymbol x^\top_i \boldsymbol\beta_j)}{\sum_{l=1}^J\exp(\boldsymbol x_i^\top \boldsymbol\beta_l)}\right]^{\tilde y_{ij}}
+\]</span> and the log-likelihood is: <span class="math display">\[
+\sum_{i=1}^n \sum_{j=1}^J \tilde y_{ij}
+\log\left[\frac{\exp(\boldsymbol x^\top_i  \boldsymbol\beta_j)}{\sum_{l=1}^J\exp(\boldsymbol x_i^\top \boldsymbol\beta_l)}\right]=
+\sum_{i=1}^n \left(\sum_{j=1}^J \tilde y_{ij}\boldsymbol x^\top_i  \boldsymbol\beta_j\right) - \mathrm{log}\sum_{l=1}^J\exp(\boldsymbol x_i^\top \boldsymbol\beta_l)
+\]</span> For identification purposes one must set the <span class="math inline">\(\boldsymbol\beta\)</span> equal to 0 for one baseline category.</p>
+</div>
+<div id="conic-program" class="section level2">
+<h2>Conic program</h2>
+<p>The second term of the log-likelihood can be modeled by conic programming. Assuming that the first category is the baseline category, the problem of maximizing the log-likelihood can be written as: <span class="math display">\[\begin{align}
+\min_{\substack{\boldsymbol\beta_l,\\ l=1,\ldots,J}}\quad &amp;- \sum_{i=1}^n \left(\sum_{j=1}^J \tilde y_{ij}\boldsymbol x^\top_i  \boldsymbol\beta_j\right) + \sum_{i=1}^n t_i\\
+\text{s.t.}\quad  &amp; u^{1}_i + \ldots + u^{J}_i  \leq 1, \quad \forall i=1,\ldots, n\\
+&amp; (-t_{i}, 1, u^1_{i})^\top\in\mathcal{K}_\text{expp}\\
+ &amp;(x_i^\top\boldsymbol \beta_j - t_i, 1, u^j_i)^\top\in\mathcal{K}_\text{expp}, \quad \forall j = 2,\ldots,J.
+\end{align}\]</span></p>
+</div>
+</div>
+<div id="estimation" class="section level1">
+<h1>Estimation</h1>
+<p>In <strong>R</strong> several packages have built in functionality for estimating the multinomial logistic regression. Among others, the <code>multinom()</code> function from <strong>nnet</strong> package (Venables &amp; Ripley, 2002), the <code>vglm()</code> and <code>multinomial()</code> functions of the <strong>VGAM</strong> package (Yee, 2010) and the <code>mlogit()</code> function from the <strong>mlogit</strong> package (Croissant, 2020).</p>
+<p>When implementing the function in ROI, the conic program above must be specified by constructing the appropriate matrices.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>mlogit_roi &lt;-<span class="st"> </span><span class="cf">function</span>(X, y, <span class="dt">solver =</span> <span class="st">&quot;auto&quot;</span>, ...) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>  stm &lt;-<span class="st"> </span>simple_triplet_matrix</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>  stzm &lt;-<span class="st"> </span>simple_triplet_zero_matrix</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>  y &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(y)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.vector</span>(y), <span class="kw">length</span>(y) <span class="op">==</span><span class="st"> </span><span class="kw">nrow</span>(X))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>  ymat &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(<span class="op">~</span><span class="st"> </span><span class="kw">as.factor</span>(y))[, <span class="op">-</span><span class="st"> </span><span class="dv">1</span>] </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>  xtilde &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(<span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">+</span><span class="st"> </span>ymat <span class="op">:</span><span class="st"> </span>X)    </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>  ytilde &lt;-<span class="st"> </span>(y <span class="op">!=</span><span class="st"> </span><span class="kw">min</span>(y)) <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="co"># indicator taking zero for category to be excluded</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>  n &lt;-<span class="st"> </span><span class="kw">nrow</span>(X); p &lt;-<span class="st"> </span><span class="kw">ncol</span>(X); J &lt;-<span class="st"> </span><span class="kw">max</span>(y); ptilde &lt;-<span class="st"> </span><span class="kw">ncol</span>(xtilde)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>  </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>  i &lt;-<span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="kw">seq_len</span>(n) <span class="op">-</span><span class="st"> </span><span class="dv">2</span> <span class="co">## triplets for cones</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a>  <span class="co">## Variables: beta_2, .., beta_J, t_i, u^1,..., u^J</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>  op &lt;-<span class="st"> </span><span class="kw">OP</span>(<span class="kw">c</span>(<span class="op">-</span><span class="st"> </span>(ytilde <span class="op">%*%</span><span class="st"> </span>xtilde), <span class="kw">rep.int</span>(<span class="dv">1</span>, n), <span class="kw">double</span>(n <span class="op">*</span><span class="st"> </span>J)), <span class="dt">maximum =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a>  Ct &lt;-<span class="st"> </span><span class="kw">stm</span>(i, <span class="kw">seq_len</span>(n), <span class="kw">rep.int</span>(<span class="dv">1</span>, n), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n)  </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a>  Cu &lt;-<span class="st"> </span><span class="kw">stm</span>(i <span class="op">+</span><span class="st"> </span><span class="dv">2</span>, <span class="kw">seq_len</span>(n), <span class="kw">rep.int</span>(<span class="op">-</span><span class="dv">1</span>, n), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a>  Clist &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seq_len</span>(J), <span class="cf">function</span>(j) {</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a>    Cx &lt;-<span class="st"> </span><span class="cf">if</span>(j <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="kw">stzm</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, ptilde) <span class="cf">else</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a>                 <span class="kw">stm</span>(<span class="kw">rep</span>(i, p), <span class="kw">rep</span>((<span class="kw">seq_len</span>(p) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">+</span><span class="st"> </span>j <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">each =</span> n),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true"></a>                  <span class="op">-</span><span class="kw">drop</span>(X), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, ptilde)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true"></a>    CC &lt;-<span class="st"> </span><span class="kw">cbind</span>(Cx, Ct, <span class="kw">stzm</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n <span class="op">*</span><span class="st"> </span>(j <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)), Cu, <span class="kw">stzm</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n <span class="op">*</span><span class="st"> </span>(J <span class="op">-</span><span class="st"> </span>j)))</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true"></a>  })</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true"></a>  </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true"></a>  C &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&quot;rbind&quot;</span>, Clist)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true"></a>  cones &lt;-<span class="st"> </span><span class="kw">K_expp</span>(J <span class="op">*</span><span class="st"> </span>n)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true"></a>  rhs &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), n <span class="op">*</span><span class="st"> </span>J)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true"></a>  </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true"></a>  CL &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">stzm</span>(n, ptilde <span class="op">+</span><span class="st"> </span>n),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true"></a>              <span class="kw">stm</span>(<span class="kw">rep</span>(<span class="kw">seq_len</span>(n), J), <span class="kw">seq_len</span>(n <span class="op">*</span><span class="st"> </span>J), <span class="kw">rep.int</span>(<span class="dv">1</span>, n <span class="op">*</span><span class="st"> </span>J), n, n <span class="op">*</span><span class="st"> </span>J))</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true"></a>  </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true"></a>  rhs &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), n <span class="op">*</span><span class="st"> </span>J)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true"></a>  <span class="kw">constraints</span>(op) &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">C_constraint</span>(C, cones, rhs),</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true"></a>                           <span class="kw">L_constraint</span>(CL, </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true"></a>                                        <span class="dt">dir =</span> <span class="kw">rep</span>(<span class="st">&quot;&lt;=&quot;</span>, <span class="kw">nrow</span>(CL)), </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true"></a>                                        <span class="dt">rhs =</span>  <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(CL))))</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true"></a>  </span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true"></a>  <span class="kw">bounds</span>(op) &lt;-<span class="st"> </span><span class="kw">V_bound</span>(<span class="dt">ld =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">nobj =</span> <span class="kw">ncol</span>(C))</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true"></a>  <span class="kw">ROI_solve</span>(op, <span class="dt">solver =</span> solver, ...)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true"></a>}</span></code></pre></div>
+</div>
+<div id="examples" class="section level1">
+<h1>Examples</h1>
+<div id="heating-data" class="section level2">
+<h2>Heating data</h2>
+<p>We using the <code>Heating</code> data set from the <code>mlogit</code> package as an illustration:s</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;Heating&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</span></code></pre></div>
+<p>We estimate the model using the function <code>mlogit()</code>, which uses the Newton-Raphson algorithm.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;Heating&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>H &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Heating, <span class="dt">choice =</span> <span class="st">&quot;depvar&quot;</span>, <span class="dt">varying =</span> <span class="kw">c</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">12</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="kw">coef</span>(<span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>rooms <span class="op">+</span><span class="st">  </span>region <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, <span class="dt">data =</span> H, </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>            <span class="dt">reflevel =</span> <span class="st">&quot;gc&quot;</span>))</span></code></pre></div>
+<pre><code>##  (Intercept):ec  (Intercept):er  (Intercept):gr  (Intercept):hp        rooms:ec        rooms:er        rooms:gr        rooms:hp regionscostl:ec regionscostl:er regionscostl:gr regionscostl:hp regionmountn:ec regionmountn:er regionmountn:gr regionmountn:hp regionncostl:ec regionncostl:er regionncostl:gr regionncostl:hp 
+##    -2.397389558    -1.959492165    -1.329071339    -2.277360440     0.064488335     0.039762875    -0.010950178     0.020221356    -0.076876160    -0.008165969     0.040204869    -0.216228239     0.119548090     0.108706856     0.131126030     0.059236047    -0.225780841    -0.551739531    -0.553304337    -0.639282368</code></pre>
+<p>Now using <strong>ROI</strong>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">library</span>(ROI)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="kw">library</span>(ROI.plugin.ecos)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="kw">library</span>(slam)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>y &lt;-<span class="st"> </span>Heating<span class="op">$</span>depvar</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(<span class="op">~</span><span class="st"> </span>rooms <span class="op">+</span><span class="st">  </span>region, <span class="dt">data =</span> Heating)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a>res &lt;-<span class="st"> </span><span class="kw">mlogit_roi</span>(X, y)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>s2 &lt;-<span class="st"> </span><span class="kw">solution</span>(res)[<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="kw">names</span>(s2) &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">expand.grid</span>(<span class="kw">levels</span>(y)[<span class="op">-</span><span class="dv">1</span>], <span class="kw">colnames</span>(X)), <span class="dv">1</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>                   <span class="cf">function</span>(x) <span class="kw">paste0</span>(x[<span class="dv">2</span>], <span class="st">&quot;:&quot;</span>, x[<span class="dv">1</span>]))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a>s2</span></code></pre></div>
+<pre><code>##  (Intercept):gr  (Intercept):ec  (Intercept):er  (Intercept):hp        rooms:gr        rooms:ec        rooms:er        rooms:hp regionscostl:gr regionscostl:ec regionscostl:er regionscostl:hp regionmountn:gr regionmountn:ec regionmountn:er regionmountn:hp regionncostl:gr regionncostl:ec regionncostl:er regionncostl:hp 
+##    -1.329071700    -2.397389592    -1.959492204    -2.277360469    -0.010950099     0.064488342     0.039762884     0.020221361     0.040204860    -0.076876160    -0.008165968    -0.216228243     0.131126046     0.119548092     0.108706857     0.059236047    -0.553308096    -0.225780854    -0.551739549    -0.639282359</code></pre>
+</div>
+<div id="fishing-data" class="section level2">
+<h2>Fishing data</h2>
+<p>Using the <code>Fishing</code> data set in <strong>mlogit</strong>, we estimate the multinomial model introduced in the first section using the function <code>mlogit()</code> from the <strong>mlogit</strong> package</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;Fishing&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>Fish &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Fishing, <span class="dt">varying =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">9</span>, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;mode&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="kw">coef</span>(<span class="kw">mlogit</span>(mode <span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>income, <span class="dt">data =</span> Fish))</span></code></pre></div>
+<pre><code>##    (Intercept):boat (Intercept):charter    (Intercept):pier         income:boat      income:charter         income:pier 
+##        7.389208e-01        1.341291e+00        8.141503e-01        9.190636e-05       -3.163988e-05       -1.434029e-04</code></pre>
+<p>In <strong>ROI</strong>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>y &lt;-<span class="st"> </span>Fishing<span class="op">$</span>mode</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(<span class="op">~</span><span class="st"> </span>income, <span class="dt">data =</span> Fishing)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>res2 &lt;-<span class="st"> </span><span class="kw">mlogit_roi</span>(X, y)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>nam &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">expand.grid</span>(<span class="kw">levels</span>(y)[<span class="op">-</span><span class="dv">1</span>], <span class="kw">colnames</span>(X)), <span class="dv">1</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>             <span class="cf">function</span>(x) <span class="kw">paste0</span>(x[<span class="dv">2</span>], <span class="st">&quot;:&quot;</span>, x[<span class="dv">1</span>]))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a>s1 &lt;-<span class="st"> </span><span class="kw">solution</span>(res2)[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a><span class="kw">names</span>(s1) &lt;-<span class="st"> </span>nam </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true"></a>s1</span></code></pre></div>
+<pre><code>##    (Intercept):pier    (Intercept):boat (Intercept):charter         income:pier         income:boat      income:charter 
+##        8.141508e-01        7.389215e-01        1.341292e+00       -1.434031e-04        9.190626e-05       -3.163994e-05</code></pre>
+</div>
+</div>
+<div id="extensions" class="section level1">
+<h1>Extensions</h1>
+<div id="constraints-on-the-coefficients" class="section level2">
+<h2>Constraints on the coefficients</h2>
+<p>Often more parsimonious models should be employed where constraints on the <span class="math inline">\(\boldsymbol\beta\)</span>’s are desired. An example of such a model is: <span class="math display">\[\begin{align*}
+\eta_{ij} &amp;= \beta_{0j} + \boldsymbol x_i^\top \boldsymbol\beta\\
+P(y_i = j | \boldsymbol x_i) &amp;= \frac{\exp(\eta_{ij})}{\sum_{l=1}^J\exp(\eta_{il})}
+\end{align*}\]</span> We can introduce the <strong>VGAM</strong> type constraints where for each covariate a full-rank matrix of constraints <span class="math inline">\(H_p\)</span> is specified, which in the most general case are all equal to the identity matrix. The rows of each matrix correspond to the category <span class="math inline">\(j=1\ldots J\)</span> and each column stands for a parameter to be estimated. Combining these <span class="math inline">\(H_1, \ldots, H_P\)</span> matrices into a block diagonal matrix gives rise to the <span class="math inline">\(H_\beta\)</span> matrix of constraints.</p>
+<div id="estimation-1" class="section level3">
+<h3>Estimation</h3>
+<p>We interact each column of the covariate matrix <span class="math inline">\(X\)</span> with the <span class="math inline">\(n\times J\)</span> design matrix <span class="math inline">\(\tilde Y\)</span> and obtain the model matrix: <span class="math display">\[\begin{align*}
+\tilde X&amp;= \left(\mathrm{diag}(X\cdot \boldsymbol e_1){\tilde{Y}}|\ldots|\mathrm{diag}(X\cdot\boldsymbol e_{P}){\tilde{Y}} \right)\\
+\end{align*}\]</span> where <span class="math inline">\(\boldsymbol e_p\)</span> for <span class="math inline">\(p=1,\ldots P\)</span> is the orthonormal basis. The total number of coefficients <span class="math inline">\(P^*\)</span> is equal to the number of columns of <span class="math inline">\(H\)</span>: <span class="math inline">\(P^*=\mathrm{ncol}(H)\)</span>. Let <span class="math inline">\(\tilde H^{(j)}_\beta\)</span> be the <span class="math inline">\((P \times P^*)\)</span> matrix of constraints corresponding to the <span class="math inline">\(j\)</span>-th category. This is obtained by taking the rows in <span class="math inline">\(H_p\)</span> that correspond to the <span class="math inline">\(j\)</span>-th category.</p>
+<p>For example, the matrix <span class="math inline">\(H_\text{(Intercept)}\)</span> for the model above is (assuming the first category is the baseline): <span class="math display">\[
+\begin{pmatrix}
+      &amp; \beta_{02} &amp; \beta_{03}&amp;\ldots &amp; \beta_{0J}\\
+j = 1 &amp; 0   &amp;0    &amp; \ldots&amp;0 \\
+j = 2 &amp;  1 &amp; 0&amp;\ldots&amp; 0\\
+j = 3 &amp;  0 &amp; 1&amp;\ldots&amp; 0\\
+\vdots &amp; \vdots &amp; \ddots &amp;\ldots&amp; \vdots\\
+j = J &amp;  0&amp;0&amp;\ldots&amp; 1\\
+\end{pmatrix}.
+\]</span> Note that there is no column corresponding to <span class="math inline">\(\beta_{01}\)</span>, as for identifiability one of the <span class="math inline">\(\beta_{0\cdot}\)</span> parameters should be set to zero. The matrix <span class="math inline">\(H_\text{(X1)}\)</span> for the first covariate would be: <span class="math display">\[
+\begin{pmatrix}
+      &amp; \beta_{\text{X1}}\\
+j = 1 &amp; 1  \\
+j = 2 &amp;  1 \\
+j = 3 &amp;  1\\
+\vdots &amp; \vdots\\
+j = J &amp;  1\\
+\end{pmatrix}.
+\]</span> Let <span class="math inline">\(\boldsymbol{\tilde \beta}\)</span> be the vector of coefficients to be estimated (in the example above <span class="math inline">\(\boldsymbol{\tilde \beta}=(\beta_{02}, \beta_{03}, \ldots, \beta_{0J}, \beta_{\text{X1}}, \ldots)^\top\)</span>).</p>
+<p>The problem including constraints is: <span class="math display">\[\begin{align*}
+\min_{\substack{\boldsymbol\beta_l,\\ l=1,\ldots,J}}\quad &amp;\sum_{i=1}^n \left(\sum_{j=1}^J \tilde y_{ij}\boldsymbol {\tilde x}^\top_i H_\beta \boldsymbol{\tilde\beta}\right) + \sum_{i=1}^n t_i\\
+\text{s.t.}\quad  &amp; u^{1}_i + \ldots + u^{J}_i  \leq 1, \quad \forall i=1,\ldots, n\\
+ &amp;(x_i^\top\tilde{H}^{(j)}_\beta\tilde{\boldsymbol\beta}- t_i, 1, u^j_i)^\top\in\mathcal{K}_\text{expp}, \quad \forall j = 1,\ldots,J.
+\end{align*}\]</span></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>mlogit_hbeta_roi &lt;-<span class="st"> </span><span class="cf">function</span>(X, y, <span class="dt">Hbeta =</span> <span class="ot">NULL</span>, </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>                             <span class="dt">solver =</span> <span class="st">&quot;auto&quot;</span>, ...) {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>  stm &lt;-<span class="st"> </span>simple_triplet_matrix</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a>  stzm &lt;-<span class="st"> </span>simple_triplet_zero_matrix</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>  y &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(y)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.vector</span>(y), <span class="kw">length</span>(y) <span class="op">==</span><span class="st"> </span><span class="kw">nrow</span>(X))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a>  n &lt;-<span class="st"> </span><span class="kw">nrow</span>(X); p &lt;-<span class="st"> </span><span class="kw">ncol</span>(X); J &lt;-<span class="st"> </span><span class="kw">max</span>(y); </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>  <span class="cf">if</span> (<span class="kw">is.null</span>(Hbeta)) Hbeta &lt;-<span class="st"> </span><span class="kw">diag</span>(p <span class="op">*</span><span class="st"> </span>J) </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a>  <span class="cf">if</span> (<span class="kw">is.list</span>(Hbeta)) Hbeta &lt;-<span class="st"> </span>Matrix<span class="op">::</span><span class="kw">bdiag</span>(Hbeta)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true"></a>  <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.matrix</span>(Hbeta)) Hbeta &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(Hbeta) </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true"></a>  ptilde &lt;-<span class="st"> </span><span class="kw">ncol</span>(Hbeta)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true"></a>  ymat &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(<span class="op">~</span><span class="st"> </span><span class="dv">-1</span> <span class="op">+</span><span class="st"> </span><span class="kw">as.factor</span>(y))</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true"></a>  xtilde &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(<span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">+</span><span class="st"> </span>ymat <span class="op">:</span><span class="st"> </span>X)    </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true"></a>  H &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seq_len</span>(J), <span class="cf">function</span>(j) {</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true"></a>   Hbeta[<span class="kw">c</span>((<span class="kw">seq_len</span>(p) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>J <span class="op">+</span><span class="st"> </span>j), ]</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true"></a>  })</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true"></a>  i &lt;-<span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="kw">seq_len</span>(n) <span class="op">-</span><span class="st"> </span><span class="dv">2</span> <span class="co">## triplets for cones</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true"></a>  op &lt;-<span class="st"> </span><span class="kw">OP</span>(<span class="kw">c</span>(<span class="op">-</span><span class="st"> </span><span class="kw">drop</span>(<span class="kw">colSums</span>(xtilde <span class="op">%*%</span><span class="st"> </span>Hbeta)), <span class="kw">rep.int</span>(<span class="dv">1</span>, n),</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true"></a>             <span class="kw">double</span>(n <span class="op">*</span><span class="st"> </span>J)), </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true"></a>    <span class="dt">maximum =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true"></a>  Ct &lt;-<span class="st"> </span><span class="kw">stm</span>(i, <span class="kw">seq_len</span>(n), <span class="kw">rep.int</span>(<span class="dv">1</span>, n), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n)  </span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true"></a>  Cu &lt;-<span class="st"> </span><span class="kw">stm</span>(i <span class="op">+</span><span class="st"> </span><span class="dv">2</span>, <span class="kw">seq_len</span>(n), <span class="kw">rep.int</span>(<span class="op">-</span><span class="dv">1</span>, n), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n)</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true"></a>  Clist &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seq_len</span>(J), <span class="cf">function</span>(j) {</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true"></a>    Cx &lt;-<span class="st"> </span><span class="kw">stm</span>(<span class="kw">rep</span>(i, ptilde), <span class="kw">rep</span>(<span class="kw">seq_len</span>(ptilde), <span class="dt">each =</span> n),</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true"></a>              <span class="op">-</span><span class="kw">drop</span>(X <span class="op">%*%</span><span class="st"> </span>H[[j]]), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, ptilde)</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true"></a>    </span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true"></a>    CC &lt;-<span class="st"> </span><span class="kw">cbind</span>(Cx, Ct, <span class="kw">stzm</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n <span class="op">*</span><span class="st"> </span>(j <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)), Cu, </span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true"></a>                <span class="kw">stzm</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n <span class="op">*</span><span class="st"> </span>(J <span class="op">-</span><span class="st"> </span>j)))</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true"></a>  })</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true"></a>  </span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true"></a>  C &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&quot;rbind&quot;</span>, Clist)</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true"></a>  cones &lt;-<span class="st"> </span><span class="kw">K_expp</span>(J <span class="op">*</span><span class="st"> </span>n)</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true"></a>  rhs &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), n <span class="op">*</span><span class="st"> </span>J)</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true"></a></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true"></a>  CL &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">stzm</span>(n, ptilde <span class="op">+</span><span class="st"> </span>n), </span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true"></a>              <span class="kw">stm</span>(<span class="kw">rep</span>(<span class="kw">seq_len</span>(n), J), <span class="kw">seq_len</span>(n <span class="op">*</span><span class="st"> </span>J),</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true"></a>                  <span class="kw">rep.int</span>(<span class="dv">1</span>, n <span class="op">*</span><span class="st"> </span>J), n, n <span class="op">*</span><span class="st"> </span>J))</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true"></a></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true"></a>  <span class="kw">constraints</span>(op) &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">C_constraint</span>(C, cones, rhs),</span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true"></a>                           <span class="kw">L_constraint</span>(CL, </span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true"></a>                                        <span class="dt">dir =</span> <span class="kw">rep</span>(<span class="st">&quot;&lt;=&quot;</span>, <span class="kw">nrow</span>(CL)), </span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true"></a>                                        <span class="dt">rhs =</span>  <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(CL))))</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true"></a>  </span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true"></a>  <span class="kw">bounds</span>(op) &lt;-<span class="st"> </span><span class="kw">V_bound</span>(<span class="dt">ld =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">nobj =</span> <span class="kw">ncol</span>(C))</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true"></a>  <span class="kw">ROI_solve</span>(op, <span class="dt">solver =</span> solver, ...)</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true"></a>}</span></code></pre></div>
+</div>
+<div id="example" class="section level3">
+<h3>Example</h3>
+<p>For comparison purposes we use the <strong>VGAM</strong> package to estimate a multinomial logistic model with constraints. The data set <code>Fishing</code> is used for illustration. We estimate the model with different intercepts for each category where <span class="math inline">\(\beta_{04}=0\)</span> with one common <span class="math inline">\(\boldsymbol\beta=\boldsymbol\beta_1=\boldsymbol\beta_2=\boldsymbol\beta_3\)</span> and <span class="math inline">\(\boldsymbol\beta_4=0\)</span>.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="kw">library</span>(VGAM)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>pneumo &lt;-<span class="st"> </span><span class="kw">transform</span>(pneumo, <span class="dt">let =</span> <span class="kw">log</span>(exposure.time))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a><span class="kw">coef</span>(<span class="kw">vglm</span>(mode <span class="op">~</span><span class="st"> </span>income, multinomial, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>          <span class="dt">data =</span> Fishing, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>          <span class="dt">constraints =</span> <span class="kw">list</span>(<span class="st">&quot;(Intercept)&quot;</span> =<span class="st"> </span><span class="kw">diag</span>(<span class="dv">3</span>),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>                             <span class="st">&quot;income&quot;</span> =<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)))))</span></code></pre></div>
+<pre><code>## (Intercept):1 (Intercept):2 (Intercept):3        income 
+## -1.459912e+00 -1.175968e+00 -3.222706e-01  6.023268e-05</code></pre>
+<p>Now using <strong>ROI</strong>.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a>y &lt;-<span class="st"> </span>Fishing<span class="op">$</span>mode</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(<span class="op">~</span><span class="st"> </span>income, <span class="dt">data =</span> Fishing)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>J &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="kw">as.numeric</span>(y))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>Hbeta &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">rbind</span>(<span class="kw">diag</span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">0</span>),  </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a>              <span class="kw">c</span>(<span class="kw">rep</span>(1L, J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">0</span>))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a>Hbeta</span></code></pre></div>
+<pre><code>## [[1]]
+##      [,1] [,2] [,3]
+## [1,]    1    0    0
+## [2,]    0    1    0
+## [3,]    0    0    1
+## [4,]    0    0    0
+## 
+## [[2]]
+## [1] 1 1 1 0</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>res &lt;-<span class="st"> </span><span class="kw">mlogit_hbeta_roi</span>(X, y, <span class="dt">Hbeta =</span> Hbeta)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a>s1 &lt;-<span class="st"> </span><span class="kw">solution</span>(res)[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>s1</span></code></pre></div>
+<pre><code>## [1] -1.459912e+00 -1.175968e+00 -3.222704e-01  6.023264e-05</code></pre>
+</div>
+</div>
+<div id="individual-and-alternative-specific-covariates" class="section level2">
+<h2>Individual and alternative specific covariates</h2>
+<p>We illustrate how a multinomial logistic model with individual and alternative-specific covariates (such as the ones introduced in <strong>mlogit</strong>) can be estimated using <strong>ROI</strong>. Consider the following model <span class="math inline">\(j\in \{1,\ldots,J\}\)</span>.</p>
+<p><span class="math display">\[\begin{align*}
+\eta_{ij} &amp;= \beta_{0j} + \boldsymbol x_i^\top \boldsymbol\beta_j + \boldsymbol z_{ij}^\top \boldsymbol\gamma_j\\
+P(y_i = j | \boldsymbol x_i, \boldsymbol z_{ij}) &amp;= \frac{\exp(\eta_{ij})}{\sum_{l=1}^J\exp(\eta_{il})}
+\end{align*}\]</span></p>
+<div id="estimation-2" class="section level3">
+<h3>Estimation</h3>
+<p>For identifiability, one of the intercepts and one of the <span class="math inline">\(\beta\)</span>’s should be fixed to zero. The parameters of the alternative specific covariates can all be estimated.</p>
+<p>The problem is: <span class="math display">\[\begin{align*}
+\min_{\substack{\boldsymbol\beta_l,\\ l=1,\ldots,J}}\quad &amp;\sum_{i=1}^n \left(\sum_{j=2}^J \tilde y_{ij}\boldsymbol {x}^\top_i \boldsymbol{\beta}_j + \sum_{j=1}^J \tilde y_{ij} \boldsymbol {z}_{ij}^\top \boldsymbol{\gamma}_j\right) + \sum_{i=1}^n t_i\\
+\text{s.t.}\quad  &amp; u^{1}_i + \ldots + u^{J}_i  \leq 1, \quad \forall i=1,\ldots, n\\
+&amp;(\boldsymbol {z}_{ij}^\top \boldsymbol{\gamma}_j -  t_i, 1, u^1_i)^\top\in\mathcal{K}_\text{expp}, \\
+ &amp;(x_i^\top\boldsymbol \beta_j + \boldsymbol {z}_{ij}^\top \boldsymbol{\gamma}_j - t_i, 1, u^j_i)^\top\in\mathcal{K}_\text{expp}, \quad \forall j = 2,\ldots,J.
+\end{align*}\]</span>.</p>
+<p>We also include constraints on both the <span class="math inline">\(\boldsymbol \beta\)</span> and <span class="math inline">\(\boldsymbol \gamma\)</span> coefficients, similar to the setup introduced in the previous section: <span class="math display">\[\begin{align*}
+\min_{\substack{\boldsymbol\beta_l,\\ l=1,\ldots,J}}\quad &amp;\sum_{i=1}^n \left(\sum_{j=1}^J \tilde y_{ij}\boldsymbol {\tilde x}^\top_i H_\beta \boldsymbol{\tilde\beta}+ \sum_{j=1}^J \tilde y_{ij}\boldsymbol{z}^\top_{ij} H_\gamma \boldsymbol{\tilde\gamma}\right) + \sum_{i=1}^n t_i\\
+\text{s.t.}\quad  &amp; u^{1}_i + \ldots + u^{J}_i  \leq 1, \quad \forall i=1,\ldots, n\\
+ &amp;(x_i^\top\tilde{H}^{(j)}_\beta\tilde{\boldsymbol\beta} +
+ z_{ij}^\top\tilde{H}^{(j)}_\gamma\tilde{\boldsymbol\gamma} - t_i, 1, u^j_i)^\top\in\mathcal{K}_\text{expp}, \quad \forall j = 1,\ldots,J.
+\end{align*}\]</span></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a>mlogit_roi_xz &lt;-<span class="st"> </span><span class="cf">function</span>(X, Z, y, <span class="dt">Hbeta =</span> <span class="ot">NULL</span>, <span class="dt">Hgamma =</span> <span class="ot">NULL</span>, </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a>                          <span class="dt">solver =</span> <span class="st">&quot;auto&quot;</span>, ...) {</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a>  stm &lt;-<span class="st"> </span>simple_triplet_matrix</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true"></a>  stzm &lt;-<span class="st"> </span>simple_triplet_zero_matrix</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true"></a>  lev &lt;-<span class="st"> </span><span class="kw">levels</span>(<span class="kw">as.factor</span>(y))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true"></a>  y &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(y)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true"></a>  Z &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(Z)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.vector</span>(y), <span class="kw">length</span>(y) <span class="op">==</span><span class="st"> </span><span class="kw">nrow</span>(X))</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true"></a>  varz &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">..*&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="kw">colnames</span>(Z)))</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true"></a>  px &lt;-<span class="st"> </span><span class="kw">ncol</span>(X); pz &lt;-<span class="st"> </span><span class="kw">length</span>(varz)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true"></a>  n &lt;-<span class="st"> </span><span class="kw">nrow</span>(X); p &lt;-<span class="st"> </span>px <span class="op">+</span><span class="st"> </span>pz; J &lt;-<span class="st"> </span><span class="kw">max</span>(y); </span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true"></a>  <span class="cf">if</span> (<span class="kw">is.null</span>(Hbeta))  Hbeta &lt;-<span class="st"> </span><span class="kw">diag</span>(px <span class="op">*</span><span class="st"> </span>J) </span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true"></a>  <span class="cf">if</span> (<span class="kw">is.null</span>(Hgamma)) Hgamma &lt;-<span class="st"> </span><span class="kw">diag</span>(pz <span class="op">*</span><span class="st"> </span>J) </span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true"></a>  <span class="cf">if</span> (<span class="kw">is.list</span>(Hbeta))  Hbeta &lt;-<span class="st"> </span>Matrix<span class="op">::</span><span class="kw">bdiag</span>(Hbeta)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true"></a>  <span class="cf">if</span> (<span class="kw">is.list</span>(Hgamma))  Hgamma &lt;-<span class="st"> </span>Matrix<span class="op">::</span><span class="kw">bdiag</span>(Hgamma)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true"></a>  <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.matrix</span>(Hbeta)) Hbeta &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(Hbeta) </span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true"></a>  <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.matrix</span>(Hgamma)) Hgamma &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(Hgamma) </span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true"></a>  pxtilde &lt;-<span class="st"> </span><span class="kw">ncol</span>(Hbeta); pztilde &lt;-<span class="st"> </span><span class="kw">ncol</span>(Hgamma)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true"></a>  ptilde  &lt;-<span class="st"> </span>pxtilde <span class="op">+</span><span class="st"> </span>pztilde</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true"></a>  Hx &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seq_len</span>(J), <span class="cf">function</span>(j) {</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true"></a>   Hbeta[<span class="kw">c</span>((<span class="kw">seq_len</span>(px) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>J <span class="op">+</span><span class="st"> </span>j), ]</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true"></a>  })</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true"></a>  Hz &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seq_len</span>(J), <span class="cf">function</span>(j) {</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true"></a>   Hgamma[<span class="kw">c</span>((<span class="kw">seq_len</span>(pz) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>J <span class="op">+</span><span class="st"> </span>j), ]</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true"></a>  })</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true"></a>  </span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true"></a>  ymat &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(<span class="op">~</span><span class="st"> </span><span class="dv">-1</span> <span class="op">+</span><span class="st"> </span><span class="kw">as.factor</span>(y))</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true"></a>  <span class="kw">colnames</span>(ymat) &lt;-<span class="st"> </span>lev</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true"></a>  xtilde &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(<span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">+</span><span class="st"> </span>ymat <span class="op">:</span><span class="st"> </span>X)  </span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true"></a></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true"></a>  yZ &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">sapply</span>(varz, <span class="cf">function</span>(x) </span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true"></a>    <span class="kw">colSums</span>(ymat <span class="op">*</span><span class="st"> </span>Z[, <span class="kw">grep</span>(x, <span class="kw">colnames</span>(Z))])))</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true"></a>  </span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true"></a>  i &lt;-<span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="kw">seq_len</span>(n) <span class="op">-</span><span class="st"> </span><span class="dv">2</span> <span class="co">## triplets for cones</span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true"></a>  </span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true"></a>  op &lt;-<span class="st"> </span><span class="kw">OP</span>(<span class="kw">c</span>(<span class="op">-</span><span class="st"> </span><span class="kw">drop</span>(<span class="kw">colSums</span>(xtilde <span class="op">%*%</span><span class="st"> </span>Hbeta)), <span class="op">-</span><span class="st"> </span><span class="kw">drop</span>(yZ <span class="op">%*%</span><span class="st"> </span>Hgamma), </span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true"></a>             <span class="kw">rep.int</span>(<span class="dv">1</span>, n), <span class="kw">double</span>(n <span class="op">*</span><span class="st"> </span>J)), </span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true"></a>           <span class="dt">maximum =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true"></a>  Ct &lt;-<span class="st"> </span><span class="kw">stm</span>(i, <span class="kw">seq_len</span>(n), <span class="kw">rep.int</span>(<span class="dv">1</span>, n), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n)  </span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true"></a>  Cu &lt;-<span class="st"> </span><span class="kw">stm</span>(i <span class="op">+</span><span class="st"> </span><span class="dv">2</span>, <span class="kw">seq_len</span>(n), <span class="kw">rep.int</span>(<span class="op">-</span><span class="dv">1</span>, n), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n)</span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true"></a>  Clist &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seq_len</span>(J), <span class="cf">function</span>(j) {</span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true"></a>    Cx &lt;-<span class="st"> </span><span class="kw">stm</span>(<span class="kw">rep</span>(i, pxtilde), <span class="kw">rep</span>(<span class="kw">seq_len</span>(pxtilde), <span class="dt">each =</span> n),</span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true"></a>              <span class="op">-</span><span class="kw">drop</span>(X <span class="op">%*%</span><span class="st"> </span>Hx[[j]]), <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, pxtilde)</span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true"></a>    Cz &lt;-<span class="st"> </span><span class="kw">stm</span>(<span class="kw">rep</span>(i, pztilde), <span class="kw">rep</span>(<span class="kw">seq_len</span>(pztilde), <span class="dt">each =</span> n), </span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true"></a>              <span class="op">-</span><span class="st"> </span><span class="kw">drop</span>(Z[, <span class="kw">grepl</span>(lev[j], <span class="kw">colnames</span>(Z))] <span class="op">%*%</span><span class="st"> </span>Hz[[j]]), </span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true"></a>              <span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, pztilde)</span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true"></a>    CC &lt;-<span class="st"> </span><span class="kw">cbind</span>(Cx, Cz, Ct, <span class="kw">stzm</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n <span class="op">*</span><span class="st"> </span>(j <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)), Cu, <span class="kw">stzm</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span>n, n <span class="op">*</span><span class="st"> </span>(J <span class="op">-</span><span class="st"> </span>j)))</span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true"></a>  })</span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true"></a>  </span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true"></a>  C &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&quot;rbind&quot;</span>, Clist)</span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true"></a>  cones &lt;-<span class="st"> </span><span class="kw">K_expp</span>(J <span class="op">*</span><span class="st"> </span>n)</span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true"></a>  rhs &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), n <span class="op">*</span><span class="st"> </span>J)</span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true"></a></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true"></a>  CL &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">stzm</span>(n, ptilde <span class="op">+</span><span class="st"> </span>n), </span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true"></a>              <span class="kw">stm</span>(<span class="kw">rep</span>(<span class="kw">seq_len</span>(n), J), <span class="kw">seq_len</span>(n <span class="op">*</span><span class="st"> </span>J),</span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true"></a>                  <span class="kw">rep.int</span>(<span class="dv">1</span>, n <span class="op">*</span><span class="st"> </span>J), n, n <span class="op">*</span><span class="st"> </span>J))</span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true"></a></span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true"></a>  <span class="kw">constraints</span>(op) &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">C_constraint</span>(C, cones, rhs),</span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true"></a>                           <span class="kw">L_constraint</span>(CL, </span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true"></a>                                        <span class="dt">dir =</span> <span class="kw">rep</span>(<span class="st">&quot;&lt;=&quot;</span>, <span class="kw">nrow</span>(CL)), </span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true"></a>                                        <span class="dt">rhs =</span>  <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(CL))))</span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true"></a>  </span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true"></a>  <span class="kw">bounds</span>(op) &lt;-<span class="st"> </span><span class="kw">V_bound</span>(<span class="dt">ld =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">nobj =</span> <span class="kw">ncol</span>(C))</span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true"></a>  <span class="kw">ROI_solve</span>(op, <span class="dt">solver =</span> solver, ...)</span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true"></a>}</span></code></pre></div>
+</div>
+<div id="examples-1" class="section level3">
+<h3>Examples</h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;Fishing&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a><span class="kw">head</span>(Fishing)</span></code></pre></div>
+<pre><code>##      mode price.beach price.pier price.boat price.charter catch.beach catch.pier catch.boat catch.charter   income
+## 1 charter     157.930    157.930    157.930       182.930      0.0678     0.0503     0.2601        0.5391 7083.332
+## 2 charter      15.114     15.114     10.534        34.534      0.1049     0.0451     0.1574        0.4671 1250.000
+## 3    boat     161.874    161.874     24.334        59.334      0.5333     0.4522     0.2413        1.0266 3750.000
+## 4    pier      15.134     15.134     55.930        84.930      0.0678     0.0789     0.1643        0.5391 2083.333
+## 5    boat     106.930    106.930     41.514        71.014      0.0678     0.0503     0.1082        0.3240 4583.332
+## 6 charter     192.474    192.474     28.934        63.934      0.5333     0.4522     0.1665        0.3975 4583.332</code></pre>
+<p>We estimate the following model for the <code>Fishing</code> data: <span class="math display">\[
+\eta_{ij} = \beta_{0j} + \text{income}_i \beta_j
++ \text{price}_{ij} \gamma_{\text{price},j}
++ \text{catch}_{ij} \gamma_{\text{catch},j}, \quad j\in\{\text{beach, pier, boat, charter}\}
+\]</span> <span class="math display">\[
+P(\text{mode}_i = j |\cdot )= \frac{\exp(\eta_{ij})}{\sum_{l=1}^J\exp(\eta_{il})}
+\]</span></p>
+<p>where we fix <span class="math inline">\(\beta_{0\text{beach}}=0\)</span> and <span class="math inline">\(\beta_\text{beach} = 0\)</span>.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a>Fish &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Fishing, <span class="dt">varying =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">9</span>, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;mode&quot;</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a><span class="kw">coef</span>(<span class="kw">mlogit</span>(mode <span class="op">~</span><span class="dv">0</span><span class="op">|</span>income<span class="op">|</span>price<span class="op">+</span>catch, <span class="dt">data =</span> Fish))</span></code></pre></div>
+<pre><code>##    (Intercept):boat (Intercept):charter    (Intercept):pier         income:boat      income:charter         income:pier         price:beach          price:boat       price:charter          price:pier         catch:beach          catch:boat       catch:charter          catch:pier 
+##        0.8640023382        1.8473698326        1.1318876044       -0.0001105399       -0.0002780873       -0.0001282887       -0.0379576275       -0.0208554401       -0.0160143807       -0.0392180091        4.9522607681        2.4704939055        0.7610421776        4.8834835714</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a>y &lt;-<span class="st"> </span>Fishing<span class="op">$</span>mode</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a>J &lt;-<span class="st"> </span><span class="kw">nlevels</span>(y)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a>X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(<span class="op">~</span><span class="st"> </span>income, <span class="dt">data =</span> Fishing) </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a>Z &lt;-<span class="st"> </span>Fishing[, <span class="kw">grep</span>(<span class="st">&quot;price|catch&quot;</span>, <span class="kw">colnames</span>(Fishing))]</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true"></a><span class="kw">head</span>(X)</span></code></pre></div>
+<pre><code>##   (Intercept)   income
+## 1           1 7083.332
+## 2           1 1250.000
+## 3           1 3750.000
+## 4           1 2083.333
+## 5           1 4583.332
+## 6           1 4583.332</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="kw">head</span>(Z)</span></code></pre></div>
+<pre><code>##   price.beach price.pier price.boat price.charter catch.beach catch.pier catch.boat catch.charter
+## 1     157.930    157.930    157.930       182.930      0.0678     0.0503     0.2601        0.5391
+## 2      15.114     15.114     10.534        34.534      0.1049     0.0451     0.1574        0.4671
+## 3     161.874    161.874     24.334        59.334      0.5333     0.4522     0.2413        1.0266
+## 4      15.134     15.134     55.930        84.930      0.0678     0.0789     0.1643        0.5391
+## 5     106.930    106.930     41.514        71.014      0.0678     0.0503     0.1082        0.3240
+## 6     192.474    192.474     28.934        63.934      0.5333     0.4522     0.1665        0.3975</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a>Hbeta &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a>  <span class="st">&quot;(Intercept)&quot;</span> =<span class="st"> </span><span class="kw">rbind</span>(<span class="dv">0</span>, <span class="kw">diag</span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)),</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a>  <span class="st">&quot;income&quot;</span>      =<span class="st"> </span><span class="kw">rbind</span>(<span class="dv">0</span>, <span class="kw">diag</span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true"></a>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true"></a>Hgamma &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true"></a>  <span class="st">&quot;price&quot;</span>      =<span class="st"> </span><span class="kw">diag</span>(J),</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true"></a>  <span class="st">&quot;catch&quot;</span>      =<span class="st"> </span><span class="kw">diag</span>(J)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true"></a>)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true"></a>res &lt;-<span class="st"> </span><span class="kw">mlogit_roi_xz</span>(X, Z, y, Hbeta, Hgamma)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true"></a>s1 &lt;-<span class="st"> </span><span class="kw">solution</span>(res)[<span class="dv">1</span><span class="op">:</span><span class="dv">14</span>]</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true"></a></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true"></a><span class="kw">names</span>(s1) &lt;-<span class="st">   </span><span class="kw">c</span>(<span class="kw">apply</span>(<span class="kw">expand.grid</span>(<span class="kw">levels</span>(y)[<span class="op">-</span><span class="dv">1</span>], <span class="kw">colnames</span>(X)),<span class="dv">1</span>, </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true"></a>      <span class="cf">function</span>(x) <span class="kw">paste0</span>(x[<span class="dv">2</span>], <span class="st">&quot;:&quot;</span>, x[<span class="dv">1</span>])), </span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true"></a>  <span class="kw">colnames</span>(Z))</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true"></a>s1</span></code></pre></div>
+<pre><code>##    (Intercept):pier    (Intercept):boat (Intercept):charter         income:pier         income:boat      income:charter         price.beach          price.pier          price.boat       price.charter         catch.beach          catch.pier          catch.boat       catch.charter 
+##        1.1318876547        0.8640016741        1.8473696889       -0.0001282887       -0.0001105399       -0.0002780873       -0.0379576629       -0.0392180451       -0.0208554561       -0.0160143959        4.9522619460        4.8834848920        2.4704949136        0.7610424568</code></pre>
+<p>Let us have a look at the following modification: <span class="math display">\[
+\eta_{ij} = \beta_{0j} + \text{income}_i \beta_j
++ \text{price}_{ij} \gamma_{\text{price}}
++ \text{catch}_{ij} \gamma_{\text{catch},j}, \quad j\in\{\text{beach, pier, boat, charter}\}
+\]</span></p>
+<p>where we fix <span class="math inline">\(\beta_{0\text{beach}}=0\)</span> and <span class="math inline">\(\beta_\text{beach} = 0\)</span>.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a><span class="kw">coef</span>(<span class="kw">mlogit</span>(mode <span class="op">~</span><span class="st"> </span>price <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>catch, <span class="dt">data =</span> Fish))</span></code></pre></div>
+<pre><code>##    (Intercept):boat (Intercept):charter    (Intercept):pier               price         income:boat      income:charter         income:pier         catch:beach          catch:boat       catch:charter          catch:pier 
+##        8.418450e-01        2.154866e+00        1.043026e+00       -2.528145e-02        5.542799e-05       -7.233725e-05       -1.355007e-04        3.117711e+00        2.542482e+00        7.594943e-01        2.851215e+00</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a>Hbeta &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a>  <span class="st">&quot;(Intercept)&quot;</span> =<span class="st"> </span><span class="kw">rbind</span>(<span class="dv">0</span>, <span class="kw">diag</span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)),</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a>  <span class="st">&quot;income&quot;</span>      =<span class="st"> </span><span class="kw">rbind</span>(<span class="dv">0</span>, <span class="kw">diag</span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true"></a>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true"></a>Hgamma &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true"></a>  <span class="st">&quot;price&quot;</span>      =<span class="st"> </span><span class="kw">rep.int</span>(1L, J),</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true"></a>  <span class="st">&quot;catch&quot;</span>      =<span class="st"> </span><span class="kw">diag</span>(J)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true"></a>)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true"></a>res &lt;-<span class="st"> </span><span class="kw">mlogit_roi_xz</span>(X, Z, y, Hbeta, Hgamma)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true"></a>s2 &lt;-<span class="st"> </span><span class="kw">solution</span>(res)[<span class="dv">1</span><span class="op">:</span><span class="dv">11</span>]</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true"></a><span class="kw">names</span>(s2) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">apply</span>(<span class="kw">expand.grid</span>(<span class="kw">levels</span>(y)[<span class="op">-</span><span class="dv">1</span>], <span class="kw">colnames</span>(X)),<span class="dv">1</span>, </span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true"></a>      <span class="cf">function</span>(x) <span class="kw">paste0</span>(x[<span class="dv">2</span>], <span class="st">&quot;:&quot;</span>, x[<span class="dv">1</span>])), </span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true"></a>  <span class="st">&quot;price&quot;</span>,  <span class="st">&quot;catch.beach&quot;</span>, <span class="st">&quot;catch.pier&quot;</span>, <span class="st">&quot;catch.boat&quot;</span>, <span class="st">&quot;catch.charter&quot;</span>)</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true"></a>s2</span></code></pre></div>
+<pre><code>##    (Intercept):pier    (Intercept):boat (Intercept):charter         income:pier         income:boat      income:charter               price         catch.beach          catch.pier          catch.boat       catch.charter 
+##        1.043026e+00        8.418447e-01        2.154866e+00       -1.355007e-04        5.542808e-05       -7.233716e-05       -2.528146e-02        3.117710e+00        2.851215e+00        2.542482e+00        7.594945e-01</code></pre>
+</div>
+</div>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<ul>
+<li><p>Croissant, Y. (2020). mlogit: Multinomial Logit Models. R package version 1.1-0. <a href="https://CRAN.R-project.org/package=mlogit" class="uri">https://CRAN.R-project.org/package=mlogit</a></p></li>
+<li><p>Venables, W. N. &amp; Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth Edition. Springer, New York. ISBN 0-387-95457-0</p></li>
+<li><p>Yee, T. W. (2010). The VGAM Package for Categorical Data Analysis. Journal of Statistical Software, 32(10), 1-34. URL <a href="http://www.jstatsoft.org/v32/i10/" class="uri">http://www.jstatsoft.org/v32/i10/</a>.</p></li>
+</ul>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
